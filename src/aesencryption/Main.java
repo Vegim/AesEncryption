@@ -1,5 +1,5 @@
 package aesencryption;
-
+//metodat qe mungojne mixcolumns addroundkey
 import java.util.Scanner;
 public class Main {
 //SubBytes po punon
