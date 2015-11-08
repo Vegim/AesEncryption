@@ -23,19 +23,19 @@ public class Main {
         String inputStringHex = ToHexString(inputString.getBytes());
         String inputStringKey = ToHexString(Key.getBytes());
         
-        int length = inputStringHex.length()/2;
-        int lengthkey = inputStringHex.length()/2;
+        int length = inputString.length();
+        int lengthkey = Key.length();
         int [][]state = ReturnStateMatrix(inputStringHex,length);//futete state matrix ne subbytes
         int [][] key = ReturnStateMatrix(inputStringKey,lengthkey);
         
-        AesInstance.subBytes(matrix);
-        AesInstance.ShiftRows(matrix);
-        AesInstance.MixColumns(matrix);
-        AesInstance.AddRoundKey(matrix, keyexample);
+        AesInstance.subBytes(state);
+        AesInstance.ShiftRows(state);
+        AesInstance.MixColumns(state);
+        AesInstance.AddRoundKey(state, key);
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                sb.append(Integer.toHexString(matrix[j][i]));
+                sb.append(Integer.toHexString(state[j][i]));
             }
         }
         System.out.println("Shkrimi i enkriptuar eshte "+sb.toString());
