@@ -16,12 +16,12 @@ public class Main {
         Aes AesInstance = new Aes();
        
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Jepni tekstin");
+        System.out.println("Jepni tekstin!");
         String inputString = scanner.nextLine();
-        System.out.println("Jepni qelesin");
+        System.out.println("Jepni celesin!");
         String Key = scanner.nextLine();
-        String inputStringHex = toHex(inputString);
-        String inputStringKey = toHex(Key);
+        String inputStringHex = ToHexString(inputString.getBytes());
+        String inputStringKey = ToHexString(Key.getBytes());
         
         int length = inputStringHex.length()/2;
         int lengthkey = inputStringHex.length()/2;
