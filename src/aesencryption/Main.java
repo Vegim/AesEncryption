@@ -20,8 +20,8 @@ public class Main {
         String inputString = scanner.nextLine();
         System.out.println("Jepni qelesin");
         String Key = scanner.nextLine();
-        String inputStringHex = ToHexString(inputString.getBytes());
-        String inputStringKey = ToHexString(Key.getBytes());
+        String inputStringHex = toHex(inputString);
+        String inputStringKey = toHex(Key);
         
         int length = inputStringHex.length()/2;
         int lengthkey = inputStringHex.length()/2;
@@ -32,6 +32,13 @@ public class Main {
         AesInstance.ShiftRows(matrix);
         AesInstance.MixColumns(matrix);
         AesInstance.AddRoundKey(matrix, keyexample);
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                sb.append(Integer.toHexString(matrix[j][i]));
+            }
+        }
+        System.out.println("Shkrimi i enkriptuar eshte "+sb.toString());
 
 
     }
