@@ -1,7 +1,11 @@
 package aesencryption;
 //algoritmi
 public class Aes {
-
+    int [][] galoismatrix = 
+       {{0x02, 0x03, 0x01, 0x01},
+        {0x01, 0x02, 0x03, 0x01},
+        {0x01, 0x01, 0x02, 0x03},
+        {0x03, 0x01, 0x01, 0x02}};
     int[][] sbox = {{0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76},
         {0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0},
         {0xb7, 0xfd, 0x93, 0x26, 0x36, 0x3f, 0xf7, 0xcc, 0x34, 0xa5, 0xe5, 0xf1, 0x71, 0xd8, 0x31, 0x15},
@@ -51,4 +55,106 @@ public class Aes {
         }
         return arr;
     }
+    public void MixColumns (int [][] State)
+    {
+        int[] array1 = new int[4];
+        int[] array2 = new int[4];
+        int[] array3 = new int[4];
+        int[] array4 = new int[4];
+        for(int i=0;i<4;i++)
+        {
+            array1[i] = State[i][0];
+        }
+        for(int i=0;i<4;i++)
+        {
+            array2[i] = State[i][1];
+        }
+         for(int i=0;i<4;i++)
+        {
+            array3[i] = State[i][2];
+        }
+        for(int i=0;i<4;i++)
+        {
+            array4[i] = State[i][3];
+        }
+       
+            MixColumnsCalc(array1);
+            MixColumnsCalc(array2);
+            MixColumnsCalc(array3);
+            MixColumnsCalc(array4);
+           int[] array1and4 = new int[array1.length + array2.length+array3.length+array4.length];
+           System.arraycopy(array1, 0, array1and4, 0, array1.length);
+           System.arraycopy(array2, 0, array1and4, array1.length, array2.length);
+           System.arraycopy(array3, 0, array1and4, array1.length+array2.length, array3.length);
+           System.arraycopy(array4, 0, array1and4, array1.length+array2.length+array3.length, array4.length);
+           
+            int k=0;
+        for(int i=0;i<4;i++)
+        {
+            for (int j = 0; j < 4; j++) {
+                State[j][i] = array1and4[k];
+                k++;
+
+            }
+        }
+       
+    }
+    public void AddRoundKey(int [][] state,int[][]key)
+    {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                state[j][i] = state[j][i]^key[j][i];
+            }
+        }
+    }
+    public void MixColumnsCalc (int  [] arr)
+    {
+                   int [] arr2 = new int [4];
+                   System.arraycopy(arr, 0, arr2, 0, arr2.length);
+
+        for (int i = 0; i < 4; i++) {
+            int result=0;
+            for (int j = 0; j < 4; j++) {
+                result ^= Gmul((byte)galoismatrix[i][j],(byte)arr2[j]); 
+            }
+            arr[i] =result; 
+        }
+    }
+    
+    public int Gmul (byte a,byte b)
+    {       
+       if(a==1)
+       {
+           return b&0xFF;
+       }
+       if(a==2)
+       {
+          return Gmul2(b);        
+         
+       }
+       if(a==3)
+       {
+           int Mul3 = (Gmul2(b) ^ b)&0xFF;// shumezimi me tre shumezimi me 2 xor me veten
+           return Mul3;
+       }
+       return 0;
+    
+    }
+
+      public int Gmul2( byte b)
+      {
+            if((b&0x80)!=0)
+           {
+               b<<=1;
+               int k = b&0xFF;
+               b^=(0x1b) ;
+               return b&0xFF ;
+           }
+           else {
+               b<<=1;
+               b^=(0x00)&0xFF;
+               return b &0xFF; 
+           }
+      }
+
 }
