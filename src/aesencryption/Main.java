@@ -1,6 +1,5 @@
 package aesencryption;
 
-import com.oracle.jrockit.jfr.ContentType;
 import java.util.Scanner;
 import java.math.BigInteger;
 public class Main {
