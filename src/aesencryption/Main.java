@@ -1,5 +1,5 @@
 package aesencryption;
-
+//metodat qe mungojne mixcolumns addroundkey
 import java.util.Scanner;
 import java.math.BigInteger;
 public class Main {
