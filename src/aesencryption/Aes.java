@@ -23,105 +23,113 @@ public class Aes {
         {0xe1, 0xf8, 0x98, 0x11, 0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf},
         {0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16}};
 
-    public void subBytes(int[][] arr) {//Kthen
-        for (int i = 0; i < arr.length; i++) 
+    public void subBytes(int[][] MatricaState) {//Kthen
+        for (int i = 0; i < MatricaState.length; i++) 
         {
-            for (int j = 0; j < arr[0].length; j++) {
-                int hex = arr[j][i];
-                arr[j][i] = sbox[hex / 16][hex % 16];
+            for (int j = 0; j < MatricaState[0].length; j++) {
+                int hex = MatricaState[i][j];
+                
+                String HexStringu = Integer.toHexString(hex);
+                if(HexStringu.length()==1)
+                {
+                   HexStringu = "0"+HexStringu;
+                }               
+                String x1 = HexStringu.substring(0, 1);              
+                String x2 = HexStringu.substring(1, 2);
+                int rreshti =Integer.parseInt(x1,16);
+                int kolona = Integer.parseInt(x2,16);
+                MatricaState[i][j] = sbox[rreshti][kolona];
             }
         }
     }
-    public void ShiftRows (int [][] arr)
+    public void ShiftRows (int [][] MatricaState)
     {
-        for(int i=1;i<arr.length;i++)
+        for(int i=1;i<MatricaState.length;i++)
         {
-            arr[i] = shiftleft(arr[i],i);
+            MatricaState[i] = zhvendosemajtas(MatricaState[i],i);
         }
     }
-    public int []  shiftleft(int []arr,int herat)
-    {
-        if(herat%4==0)
-            return arr;
-        while(herat>0)
+    public int []  zhvendosemajtas(int []rreshtistate,int zhvendosjet)
+    {      
+        while(zhvendosjet>0)
         {
-             int temp = arr[0];
-             for(int i=0;i<arr.length-1;i++)
+             int temp = rreshtistate[0];
+             for(int i=0;i<rreshtistate.length-1;i++)
              {
-                 arr[i] = arr[i+1];
+                 rreshtistate[i] = rreshtistate[i+1];
              }
-             arr[arr.length-1]= temp;
-             herat--;
+             rreshtistate[rreshtistate.length-1]= temp;
+             zhvendosjet--;
         }
-        return arr;
+        return rreshtistate;
     }
-    public void MixColumns (int [][] State)
+    public void MixColumns (int [][] MatricaState)
     {
-        int[] array1 = new int[4];
-        int[] array2 = new int[4];
-        int[] array3 = new int[4];
-        int[] array4 = new int[4];
+        int[] kolona1 = new int[4];
+        int[] kolona2 = new int[4];
+        int[] kolona3 = new int[4];
+        int[] kolona4 = new int[4];
         for(int i=0;i<4;i++)
         {
-            array1[i] = State[i][0];
+            kolona1[i] = MatricaState[i][0];
         }
         for(int i=0;i<4;i++)
         {
-            array2[i] = State[i][1];
+            kolona2[i] = MatricaState[i][1];
         }
          for(int i=0;i<4;i++)
         {
-            array3[i] = State[i][2];
+            kolona3[i] = MatricaState[i][2];
         }
         for(int i=0;i<4;i++)
         {
-            array4[i] = State[i][3];
+            kolona4[i] = MatricaState[i][3];
         }
        
-            MixColumnsCalc(array1);
-            MixColumnsCalc(array2);
-            MixColumnsCalc(array3);
-            MixColumnsCalc(array4);
-           int[] array1and4 = new int[array1.length + array2.length+array3.length+array4.length];
-           System.arraycopy(array1, 0, array1and4, 0, array1.length);
-           System.arraycopy(array2, 0, array1and4, array1.length, array2.length);
-           System.arraycopy(array3, 0, array1and4, array1.length+array2.length, array3.length);
-           System.arraycopy(array4, 0, array1and4, array1.length+array2.length+array3.length, array4.length);
+            ShumezoMatricenGaloisMeDy(kolona1);
+            ShumezoMatricenGaloisMeDy(kolona2);
+            ShumezoMatricenGaloisMeDy(kolona3);
+            ShumezoMatricenGaloisMeDy(kolona4);
+           int[] array1and4 = new int[kolona1.length + kolona2.length+kolona3.length+kolona4.length];
+           System.arraycopy(kolona1, 0, array1and4, 0, kolona2.length);
+           System.arraycopy(kolona2, 0, array1and4, kolona1.length, kolona2.length);
+           System.arraycopy(kolona3, 0, array1and4, kolona1.length+kolona2.length, kolona3.length);
+           System.arraycopy(kolona4, 0, array1and4, kolona1.length+kolona2.length+kolona3.length, kolona4.length);
            
             int k=0;
         for(int i=0;i<4;i++)
         {
             for (int j = 0; j < 4; j++) {
-                State[j][i] = array1and4[k];
+                MatricaState[j][i] = array1and4[k];
                 k++;
 
             }
         }
        
     }
-    public void AddRoundKey(int [][] state,int[][]key)
+    public void AddRoundKey(int [][] MatricaState,int[][]Celesi)
     {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                state[j][i] = state[j][i]^key[j][i];
+                MatricaState[j][i] = MatricaState[j][i]^Celesi[j][i];
             }
         }
     }
-    public void MixColumnsCalc (int  [] arr)
+    public void ShumezoMatricenGaloisMeDy (int  [] kolona)
     {
-                   int [] arr2 = new int [4];
-                   System.arraycopy(arr, 0, arr2, 0, arr2.length);
+                   int [] kolonakopje = new int [4];
+                   System.arraycopy(kolona, 0, kolonakopje, 0, kolonakopje.length);
 
         for (int i = 0; i < 4; i++) {
             int result=0;
             for (int j = 0; j < 4; j++) {
-                result ^= Gmul((byte)galoismatrix[i][j],(byte)arr2[j]); 
+                result ^= ShumezimiModulo((byte)galoismatrix[i][j],(byte)kolonakopje[j]); 
             }
-            arr[i] =result; 
+            kolona[i] =result; 
         }
     }
     
-    public int Gmul (byte a,byte b)
+    public int ShumezimiModulo (byte a,byte b)
     {       
        if(a==1)
        {
@@ -129,24 +137,23 @@ public class Aes {
        }
        if(a==2)
        {
-          return Gmul2(b);        
+          return ShumezimiModuloMeDy(b);        
          
        }
        if(a==3)
        {
-           int Mul3 = (Gmul2(b) ^ b)&0xFF;// shumezimi me tre shumezimi me 2 xor me veten
+           int Mul3 = (ShumezimiModuloMeDy(b) ^ b)&0xFF;// shumezimi me tre shumezimi me 2 xor me veten
            return Mul3;
        }
        return 0;
     
     }
 
-      public int Gmul2( byte b)
+      public int ShumezimiModuloMeDy( byte b)
       {
             if((b&0x80)!=0)
            {
                b<<=1;
-               int k = b&0xFF;
                b^=(0x1b) ;
                return b&0xFF ;
            }
@@ -158,3 +165,5 @@ public class Aes {
       }
 
 }
+
+
